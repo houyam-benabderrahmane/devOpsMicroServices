@@ -51,7 +51,7 @@ data "aws_security_group" "selected" {
 # EKS Cluster
 # ----------------------------
 resource "aws_eks_cluster" "eks" {
-  name     = "lab-eks-cluster"
+  name     = "MelCluster"
   role_arn = data.aws_iam_role.master.arn
 
   vpc_config {
@@ -60,7 +60,7 @@ resource "aws_eks_cluster" "eks" {
   }
 
   tags = {
-    Name        = "lab-eks-cluster"
+    Name        = "MelCluster"
     Environment = "dev"
     Terraform   = "true"
   }
