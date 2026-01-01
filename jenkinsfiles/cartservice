@@ -14,22 +14,17 @@ pipeline {
 
     stages {
 
-        stage('Clean Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
+        stage('Clean Workspace') { steps { cleanWs() } }
 
         stage('Checkout from Git') {
             steps {
-                git branch: 'master',
-                    url: 'https://github.com/melbouls/Microservices-E-Commerce-eks-project.git'
+                git branch: 'master', url: 'https://github.com/melbouls/Microservices-E-Commerce-eks-project.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                dir('src/cartservice') { // <-- chemin corrigé
+                dir('src/cartservice/src') {
                     sh '''
                         docker system prune -f
                         docker build -t ${ECR_REPO}:latest .
