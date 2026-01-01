@@ -14,17 +14,22 @@ pipeline {
 
     stages {
 
-        stage('Clean Workspace') { steps { cleanWs() } }
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
 
         stage('Checkout from Git') {
             steps {
-                git branch: 'master', url: 'https://github.com/melbouls/Microservices-E-Commerce-eks-project.git'
+                git branch: 'master',
+                    url: 'https://github.com/melbouls/Microservices-E-Commerce-eks-project.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                dir('src/cartservice/src') {
+                dir('src/cartservice') {
                     sh '''
                         docker system prune -f
                         docker build -t ${ECR_REPO}:latest .
@@ -62,7 +67,7 @@ pipeline {
                             sed -i "s#image:.*#image: ${ECR_URI}:${BUILD_NUMBER}#g" ${YAML_FILE}
 
                             git add ${YAML_FILE}
-                            git commit -m "Update ${ECR_REPO} image to ${BUILD_NUMBER}" || echo "No changes to commit"
+                            git commit -m "Update cartservice image to ${BUILD_NUMBER}"
                             git push https://${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git master
                         '''
                     }
