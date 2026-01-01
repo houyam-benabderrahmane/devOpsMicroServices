@@ -35,12 +35,14 @@ spec:
         - name: REDIS_ADDR
           value: "redis-cart:6379"
         resources:
-          requests:
-            cpu: 200m
-            memory: 64Mi
-          limits:
-            cpu: 300m
-            memory: 128Mi
+        requests:
+             cpu: 200m
+             memory: 256Mi # Augmenté de 64Mi à 256Mi
+        limits:
+             cpu: 300m
+             memory: 512Mi # Augmenté de 128Mi à 512Mi
+        
+          
         readinessProbe:
           initialDelaySeconds: 15
           grpc:
