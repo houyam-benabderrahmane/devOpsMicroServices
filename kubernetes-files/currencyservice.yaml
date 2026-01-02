@@ -28,7 +28,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: 471112686466.dkr.ecr.us-east-1.amazonaws.com/currencyservice:latest
+        image: gcr.io/google-samples/microservices-demo/currencyservice:v0.8.0
         ports:
         - name: grpc
           containerPort: 7000

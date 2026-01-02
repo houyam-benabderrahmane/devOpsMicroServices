@@ -27,7 +27,7 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: 471112686466.dkr.ecr.us-east-1.amazonaws.com/checkoutservice:latest
+          image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.8.0
           ports:
           - containerPort: 5050
           readinessProbe:

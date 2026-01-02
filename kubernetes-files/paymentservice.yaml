@@ -28,7 +28,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: 471112686466.dkr.ecr.us-east-1.amazonaws.com/paymentservice:latest
+        image: gcr.io/google-samples/microservices-demo/paymentservice:v0.8.0
         ports:
         - containerPort: 50051
         env:
