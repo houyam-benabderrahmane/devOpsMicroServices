@@ -38,10 +38,6 @@ variable "instance_type" {
   default = "t2.medium"
 }
 
-variable "key_name" {
-  type    = string
-}
-
 variable "instance_name" {
   type    = string
   default = "Lab-Jumphost"
@@ -57,3 +53,8 @@ variable "ami_id" {
   default = "ami-0c02fb55956c7d316" # Amazon Linux 2 LTS US-East-1
 }
 
+variable "key_name" {
+  description = "EC2 Key Pair name"
+  type        = string
+  default     = "my-ec2-key"
+}
