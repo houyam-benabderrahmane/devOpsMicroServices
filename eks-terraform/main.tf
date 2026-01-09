@@ -15,7 +15,7 @@ data "aws_iam_role" "worker" {
 }
 
 # ----------------------------
-# VPC et Subnets
+# VPC et Subnets PUBLICS
 # ----------------------------
 data "aws_vpc" "main" {
   filter {
@@ -24,13 +24,13 @@ data "aws_vpc" "main" {
   }
 }
 
-# Utilisation directe des IDs de subnet (pas de tags Name disponibles)
+# Utilisation des SUBNETS PUBLICS (ceux avec MapPublicIpOnLaunch = True)
 data "aws_subnet" "subnet-1" {
-  id = "subnet-0a279c13410eafe84"
+  id = "subnet-09ffe973cb315171e"
 }
 
 data "aws_subnet" "subnet-2" {
-  id = "subnet-02354de7499256418"
+  id = "subnet-055f200dcd69d44c6"
 }
 
 data "aws_security_group" "selected" {
@@ -49,8 +49,10 @@ resource "aws_eks_cluster" "eks" {
   role_arn = data.aws_iam_role.master.arn
 
   vpc_config {
-    subnet_ids         = [data.aws_subnet.subnet-1.id, data.aws_subnet.subnet-2.id]
-    security_group_ids = [data.aws_security_group.selected.id]
+    subnet_ids              = [data.aws_subnet.subnet-1.id, data.aws_subnet.subnet-2.id]
+    endpoint_public_access  = true
+    endpoint_private_access = true
+    security_group_ids      = [data.aws_security_group.selected.id]
   }
 
   tags = {
@@ -71,36 +73,17 @@ resource "aws_eks_node_group" "node-grp" {
   
   capacity_type  = "ON_DEMAND"
   disk_size      = 20
-  instance_types = ["t2.large"]
+  instance_types = ["t2.medium"]
 
   scaling_config {
-    desired_size = 3
-    max_size     = 10
-    min_size     = 2
+    desired_size = 2
+    max_size     = 3
+    min_size     = 1
   }
+
+  depends_on = [aws_eks_cluster.eks]
 
   tags = {
     Name = "lab-eks-node-group"
-  }
-}
-
-# ----------------------------
-# OIDC Provider pour ServiceAccount IAM Roles
-# ----------------------------
-data "aws_eks_cluster" "eks_oidc" {
-  name = aws_eks_cluster.eks.name
-}
-
-data "tls_certificate" "oidc_thumbprint" {
-  url = data.aws_eks_cluster.eks_oidc.identity[0].oidc[0].issuer
-}
-
-resource "aws_iam_openid_connect_provider" "eks_oidc" {
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.oidc_thumbprint.certificates[0].sha1_fingerprint]
-  url             = data.aws_eks_cluster.eks_oidc.identity[0].oidc[0].issuer
-
-  tags = {
-    Name = "eks-oidc-provider"
   }
 }
