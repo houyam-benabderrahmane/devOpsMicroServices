@@ -59,7 +59,7 @@ pipeline {
         stage('Update Kubernetes Manifest') {
             steps {
                 dir('kubernetes-files') {
-                    withCredentials([string(credentialsId: 'my-git-pattoken', variable: 'GIT_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'newToken', variable: 'GIT_TOKEN')]) {
                         sh '''
                             git config user.email "${GIT_EMAIL}"
                             git config user.name "${GIT_USER}"
