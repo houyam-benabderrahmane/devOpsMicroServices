@@ -61,14 +61,22 @@ pipeline {
                 dir('kubernetes-files') {
                     withCredentials([string(credentialsId: 'newToken', variable: 'GIT_TOKEN')]) {
                         sh '''
+                            # Nettoyer les credentials Git locaux
+                            git config --local --unset credential.helper || true
+                            
+                            # Configurer l'utilisateur
                             git config user.email "${GIT_EMAIL}"
                             git config user.name "${GIT_USER}"
 
+                            # Mettre à jour l'image
                             sed -i "s#image:.*#image: ${ECR_URI}:${BUILD_NUMBER}#g" ${YAML_FILE}
 
+                            # Ajouter et committer
                             git add ${YAML_FILE}
                             git commit -m "Update cartservice image to ${BUILD_NUMBER}"
-                            git push https://${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git main
+                            
+                            # Push avec le token EXPLICITEMENT dans l'URL
+                            git push https://${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git HEAD:main
                         '''
                     }
                 }
