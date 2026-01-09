@@ -3,16 +3,16 @@ pipeline {
 
     environment {
         AWS_REGION = "us-east-1"
-        AWS_ACCOUNT_ID = "471112686466"
-        ECR_REPO = "cartservice"                 // ✅ Repo cartservice
+        AWS_ACCOUNT_ID = "965836445408"
+        ECR_REPO = "cartservice"
         ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
-        GIT_REPO = "Microservices-E-Commerce-eks-project"
-        GIT_USER = "melbouls"
-        GIT_EMAIL = "melissasaraboulsan@gmail.com"
-        YAML_FILE = "cartservice.yaml"           // ✅ YAML cartservice
+        GIT_REPO = "devOpsMicroServices"
+        GIT_USER = "houyam-benabderrahmane"
+        GIT_EMAIL = "houyem.benabderrahmane@univ-constantine2.dz"
+        YAML_FILE = "cartservice.yaml"
     }
 
-   stages {
+    stages {
 
         stage('Clean Workspace') {
             steps {
@@ -22,14 +22,14 @@ pipeline {
 
         stage('Checkout from Git') {
             steps {
-                git branch: 'master',
-                    url: 'https://github.com/melbouls/Microservices-E-Commerce-eks-project.git'
+                git branch: 'main',
+                    url: 'https://github.com/houyam-benabderrahmane/devOpsMicroServices.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                dir('src/emailservice') {
+                dir('src/cartservice') {
                     sh '''
                         docker system prune -f
                         docker build -t ${ECR_REPO}:latest .
@@ -68,11 +68,20 @@ pipeline {
 
                             git add ${YAML_FILE}
                             git commit -m "Update cartservice image to ${BUILD_NUMBER}"
-                            git push https://${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git master
+                            git push https://${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git main
                         '''
                     }
                 }
             }
         }
     }
-}  
+
+    post {
+        success {
+            echo "✅ Pipeline completed successfully!"
+        }
+        failure {
+            echo "❌ Pipeline failed - check logs"
+        }
+    }
+}
