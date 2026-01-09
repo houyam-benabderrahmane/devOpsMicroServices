@@ -20,11 +20,4 @@ data "aws_security_group" "selected" {
   vpc_id = data.aws_vpc.main.id
 }
 
-# Variable
-variable "node_group_name" {
-  type    = string
-  default = "eks-node-group"
-}
-
 # Add your EKS cluster and other resources below this line
-# (your EKS cluster configuration, node groups, etc.)
