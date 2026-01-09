@@ -3,16 +3,16 @@ pipeline {
 
     environment {
         AWS_REGION = "us-east-1"
-        AWS_ACCOUNT_ID = "471112686466"
+        AWS_ACCOUNT_ID = "965836445408"  // ← Changé
         ECR_REPO = "adservice"
         ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}"
-        GIT_REPO = "Microservices-E-Commerce-eks-project"
-        GIT_USER = "melbouls"
-        GIT_EMAIL = "melissasaraboulsan@gmail.com"
+        GIT_REPO = "devOpsMicroServices"  // ← Changé
+        GIT_USER = "houyam-benabderrahmane"  // ← Changé
+        GIT_EMAIL = "houyem.benabderrahmane@univ-constantine2.dz"
         YAML_FILE = "adservice.yaml"
     }
 
-  stages {
+    stages {
 
         stage('Clean Workspace') {
             steps {
@@ -22,8 +22,8 @@ pipeline {
 
         stage('Checkout from Git') {
             steps {
-                git branch: 'master',
-                    url: 'https://github.com/melbouls/Microservices-E-Commerce-eks-project.git'
+                git branch: 'main',  // ← Changé de 'master' à 'main'
+                    url: 'https://github.com/houyam-benabderrahmane/devOpsMicroServices.git'  // ← Changé
             }
         }
 
@@ -68,11 +68,20 @@ pipeline {
 
                             git add ${YAML_FILE}
                             git commit -m "Update adservice image to ${BUILD_NUMBER}"
-                            git push https://${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git master
+                            git push https://${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO}.git main
                         '''
                     }
                 }
             }
         }
     }
-}  
+
+    post {
+        success {
+            echo "✅ Pipeline completed successfully!"
+        }
+        failure {
+            echo "❌ Pipeline failed - check logs"
+        }
+    }
+}
