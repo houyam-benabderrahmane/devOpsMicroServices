@@ -29,7 +29,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                dir('src/cartservice') {
+                dir('src/cartservice/src') {
                     sh '''
                         docker system prune -f
                         docker build -t ${ECR_REPO}:latest .
