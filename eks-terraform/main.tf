@@ -26,7 +26,7 @@ data "aws_subnet" "subnet-1" {
   vpc_id = data.aws_vpc.main.id
   filter {
     name   = "tag:Name"
-    values = ["Public-Subnet-1"]
+    values = ["REPLACE_WITH_YOUR_SUBNET1_NAME"]
   }
 }
 
@@ -34,7 +34,7 @@ data "aws_subnet" "subnet-2" {
   vpc_id = data.aws_vpc.main.id
   filter {
     name   = "tag:Name"
-    values = ["Public-Subnet-2"]
+    values = ["REPLACE_WITH_YOUR_SUBNET2_NAME"]
   }
 }
 
@@ -42,7 +42,7 @@ data "aws_security_group" "selected" {
   vpc_id = data.aws_vpc.main.id
   filter {
     name   = "tag:Name"
-    values = ["Jumphost-sg"]
+    values = ["REPLACE_WITH_YOUR_SECURITY_GROUP_NAME"]
   }
 }
 
