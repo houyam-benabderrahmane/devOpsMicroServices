@@ -1,11 +1,3 @@
-terraform {
-  backend "s3" {
-    bucket = "ml-terraform-state-8749f2b4"
-    key    = "k8/terraform.tfstate"
-    region = "us-east-1"
-  }
-}
-
 # VPC Data Source
 data "aws_vpc" "main" {
   filter {
@@ -14,13 +6,9 @@ data "aws_vpc" "main" {
   }
 }
 
-# Subnet Data Source - UPDATE "SUBNET-NAME-HERE" with your actual subnet name from the command above
+# Subnet Data Source - using subnet ID
 data "aws_subnet" "subnet-1" {
-  filter {
-    name   = "tag:Name"
-    values = ["SUBNET-NAME-HERE"]  # Replace with actual subnet name
-  }
-  vpc_id = data.aws_vpc.main.id
+  id = "subnet-0a279c13410eafe84"
 }
 
 # Security Group Data Source
@@ -32,4 +20,11 @@ data "aws_security_group" "selected" {
   vpc_id = data.aws_vpc.main.id
 }
 
-# Add your other resources here (EKS cluster, node groups, etc.)
+# Variable
+variable "node_group_name" {
+  type    = string
+  default = "eks-node-group"
+}
+
+# Add your EKS cluster and other resources below this line
+# (your EKS cluster configuration, node groups, etc.)
